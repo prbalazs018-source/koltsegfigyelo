@@ -11,10 +11,37 @@ h1, h2 {
   text-align: center;
 }
 
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 0.6rem;
+  border: none;
+  border-radius: 8px;
+  background: #1e293b;
+  color: #e5e7eb;
+  font-size: 1rem;
+}
+
+.tabs button.active {
+  background: #22c55e;
+  color: #052e16;
+  font-weight: bold;
+}
+
+.hidden {
+  display: none;
+}
+
 form {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  margin-bottom: 1rem;
 }
 
 input, select, button {
@@ -35,7 +62,6 @@ button {
 }
 
 ul {
-  margin-top: 1rem;
   list-style: none;
   padding: 0;
 }
