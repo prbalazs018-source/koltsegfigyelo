@@ -4,13 +4,13 @@ const categorySelect = document.getElementById("category");
 
 // 🔹 Előre definiált kategóriák
 const CATEGORIES = [
-  "🍔 Étel",
-  "🏠 Lakhatás",
-  "🚗 Közlekedés",
+  "🏠 Lakhatás Csapó",
+  "🏘️ Lakhatás Albi",
+  "🚗 Benzin",
   "📱 Előfizetés",
-  "🎮 Szórakozás",
+  "🍔 Szórakozás",
   "🛒 Bevásárlás",
-  "💊 Egészség",
+  "🐶 Kutya",
   "📦 Egyéb"
 ];
 
@@ -74,3 +74,4 @@ form.addEventListener("submit", (e) => {
 
 // 🔹 Első betöltés
 render();
+
