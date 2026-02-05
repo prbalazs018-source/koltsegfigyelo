@@ -1,35 +1,44 @@
 const form = document.getElementById("expense-form");
 const list = document.getElementById("expense-list");
 const categorySelect = document.getElementById("category");
+const monthPicker = document.getElementById("monthPicker");
+const totalEl = document.getElementById("total");
 
-// 🔹 Előre definiált kategóriák
+// 📂 KATEGÓRIÁK
 const CATEGORIES = [
-  "🏠 Lakhatás Csapó",
-  "🏘️ Lakhatás Albi",
-  "🚗 Benzin",
+  "🍔 Étel",
+  "🏠 Lakhatás",
+  "🚗 Közlekedés",
   "📱 Előfizetés",
-  "🍔 Szórakozás",
+  "🎮 Szórakozás",
   "🛒 Bevásárlás",
-  "🐶 Kutya",
+  "💊 Egészség",
   "📦 Egyéb"
 ];
 
-// 🔹 Kategóriák betöltése
 CATEGORIES.forEach(cat => {
-  const option = document.createElement("option");
-  option.value = cat;
-  option.textContent = cat;
-  categorySelect.appendChild(option);
+  const opt = document.createElement("option");
+  opt.value = cat;
+  opt.textContent = cat;
+  categorySelect.appendChild(opt);
 });
 
-// 🔹 Adatok betöltése
+// 📦 ADATOK
 let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 let recurringExpenses = JSON.parse(localStorage.getItem("recurring")) || [];
 
-// 🔹 Renderelés
+// 📅 AKTUÁLIS HÓNAP
+const now = new Date();
+monthPicker.value = now.toISOString().slice(0, 7);
+
+// 🔁 RENDER
 function render() {
   list.innerHTML = "";
+  let total = 0;
 
+  const selectedMonth = monthPicker.value;
+
+  // 🔁 ÁLLANDÓ KÖLTSÉGEK (minden hónapban)
   recurringExpenses.forEach(e => {
     const li = document.createElement("li");
     li.innerHTML = `
@@ -37,19 +46,26 @@ function render() {
       <small>${e.note || "Állandó költség"}</small>
     `;
     list.appendChild(li);
+    total += e.amount;
   });
 
-  expenses.forEach(e => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <strong>${e.amount} Ft</strong> – ${e.category}<br>
-      <small>${e.note || ""}</small>
-    `;
-    list.appendChild(li);
-  });
+  // 📅 HAVI KÖLTSÉGEK
+  expenses
+    .filter(e => e.date.startsWith(selectedMonth))
+    .forEach(e => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <strong>${e.amount} Ft</strong> – ${e.category}<br>
+        <small>${e.note || ""}</small>
+      `;
+      list.appendChild(li);
+      total += e.amount;
+    });
+
+  totalEl.textContent = `Összesen: ${total} Ft`;
 }
 
-// 🔹 Új költség hozzáadása
+// ➕ ÚJ KÖLTSÉG
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -57,14 +73,14 @@ form.addEventListener("submit", (e) => {
     amount: Number(amount.value),
     category: category.value,
     note: note.value,
-    date: new Date().toISOString()
+    date: monthPicker.value
   };
 
   if (recurring.checked) {
     recurringExpenses.push(expense);
     localStorage.setItem("recurring", JSON.stringify(recurringExpenses));
   } else {
-    expenses.unshift(expense);
+    expenses.push(expense);
     localStorage.setItem("expenses", JSON.stringify(expenses));
   }
 
@@ -72,6 +88,8 @@ form.addEventListener("submit", (e) => {
   render();
 });
 
-// 🔹 Első betöltés
-render();
+// 📅 HÓNAP VÁLTÁS
+monthPicker.addEventListener("change", render);
 
+// 🚀 START
+render();
