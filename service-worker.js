@@ -1,4 +1,4 @@
-const CACHE_NAME = "koltsegfigyelo-v1";
+const CACHE_NAME = "koltsegfigyelo-v1.1";
 const urlsToCache = [
   "./index.html",
   "./style.css",
@@ -19,3 +19,4 @@ self.addEventListener("fetch", event => {
     caches.match(event.request).then(resp => resp || fetch(event.request))
   );
 });
+
