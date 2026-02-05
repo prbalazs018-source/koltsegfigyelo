@@ -1,75 +1,60 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Költségfigyelő</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Költségfigyelő PWA</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#22c55e">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>💸 Költségfigyelő</h1>
+  <header>
+    <h1>Költségfigyelő</h1>
+  </header>
 
-<!-- TABOK -->
-<div class="tabs">
-  <button id="tab-month" class="active">📅 Havi</button>
-  <button id="tab-recurring">🔁 Állandó</button>
-  <button id="tab-stats">📊 Statisztika</button>
-</div>
+  <nav>
+    <button id="tab-month" class="active">📅 Havi</button>
+    <button id="tab-recurring">🔁 Állandó</button>
+    <button id="tab-stats">📊 Statisztika</button>
+  </nav>
 
-<!-- HAVI -->
-<section id="month-view">
-  <label>
-    📅 Hónap:
-    <input type="month" id="monthPicker">
-  </label>
+  <main>
+    <!-- Havi tab -->
+    <div id="month-view">
+      <label>Hónap: <input type="month" id="monthPicker"></label>
+      <form id="expense-form">
+        <input type="number" id="amount" placeholder="Kiadás (Ft)" required>
+        <input type="number" id="revenue" placeholder="Bevétel (Ft)" value="0">
+        <select id="category"></select>
+        <input type="text" id="note" placeholder="Megjegyzés">
+        <label><input type="checkbox" id="recurring"> Állandó költség</label>
+        <button type="submit">Hozzáad</button>
+      </form>
+      <ul id="expense-list"></ul>
+      <p id="total">Összesen: 0 Ft | Nettó: 0 Ft</p>
+    </div>
 
-  <h2 id="total">Összesen: 0 Ft</h2>
+    <!-- Állandó tab -->
+    <div id="recurring-view" class="hidden">
+      <ul id="recurring-list"></ul>
+    </div>
 
-  <form id="expense-form">
-    <input type="number" id="amount" placeholder="Összeg (Ft)" required>
+    <!-- Statisztika tab -->
+    <div id="stats-view" class="hidden">
+      <ul id="stats-list"></ul>
+      <canvas id="stats-chart" width="400" height="400"></canvas>
+    </div>
+  </main>
 
-    <select id="category" required>
-      <option value="">Kategória kiválasztása</option>
-    </select>
-
-    <input type="text" id="note" placeholder="Megjegyzés (opcionális)">
-
-    <label class="checkbox">
-      <input type="checkbox" id="recurring">
-      Állandó költség (havonta)
-    </label>
-
-    <button type="submit">Hozzáad</button>
-  </form>
-
-  <ul id="expense-list"></ul>
-</section>
-
-<!-- ÁLLANDÓ -->
-<section id="recurring-view" class="hidden">
-  <h2>🔁 Állandó költségek</h2>
-  <ul id="recurring-list"></ul>
-</section>
-
-<!-- STAT -->
-<section id="stats-view" class="hidden">
-  <h2>📊 Kategória statisztika</h2>
-  <ul id="stats-list"></ul>
-  <canvas id="stats-chart" width="400" height="400"></canvas>
-</section>
-
-<script src="script.js"></script>
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./service-worker.js")
-    .then(() => console.log("Service Worker regisztrálva"))
-    .catch(err => console.log("Service Worker hiba:", err));
-}
-</script>
+  <script src="script.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./service-worker.js")
+        .then(() => console.log("Service Worker regisztrálva"))
+        .catch(err => console.log("Service Worker hiba:", err));
+    }
+  </script>
 </body>
 </html>
-
-
