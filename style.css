@@ -1,5 +1,5 @@
 body {
-  background-image: url('background.png'); /* vagy 'background.png' ha gyökérben van */
+  background-image: url('background.png');
   background-size: cover;      /* kitölti a képernyőt */
   background-position: center; /* középre igazítás */
   background-repeat: no-repeat;
@@ -73,4 +73,5 @@ li {
   border-radius: 8px;
   margin-bottom: 0.5rem;
 }
+
 
