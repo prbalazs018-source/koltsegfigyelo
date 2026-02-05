@@ -69,6 +69,7 @@ function createExpenseItem(e, index, isRecurring) {
     </div>
   `;
 
+  // TÖRLÉS
   li.querySelector("[data-delete]").onclick = () => {
     if (!confirm("Biztos törlöd?")) return;
     (isRecurring ? recurringExpenses : expenses).splice(index, 1);
@@ -77,9 +78,142 @@ function createExpenseItem(e, index, isRecurring) {
     renderAll();
   };
 
+  // SZERKESZTÉS
   li.querySelector("[data-edit]").onclick = () => {
-    e.amount = Number(prompt("Új összeg:", e.amount));
-    e.category = prompt("Új kategória:", e.category);
-    e.note = prompt("Megjegyzés:", e.note || "");
+    const newAmount = prompt("Új összeg (Ft):", e.amount);
+    if (newAmount === null) return;
+
+    const newCategory = prompt("Új kategória:", e.category);
+    const newNote = prompt("Új megjegyzés:", e.note || "");
+
+    e.amount = Number(newAmount);
+    e.category = newCategory;
+    e.note = newNote;
+
     localStorage.setItem(isRecurring ? "recurring" : "expenses",
-      JSON.stringify(isRecurring ? recurringExpenses : expenses)
+      JSON.stringify(isRecurring ? recurringExpenses : expenses));
+    renderAll();
+  };
+
+  return li;
+}
+
+// 📅 HAVI RENDER
+function renderMonth() {
+  list.innerHTML = "";
+  let total = 0;
+  const month = monthPicker.value;
+
+  recurringExpenses.forEach(e => {
+    total += e.amount;
+    list.appendChild(createExpenseItem(e, 0, true));
+  });
+
+  expenses.filter(e => e.date === month).forEach((e, i) => {
+    total += e.amount;
+    list.appendChild(createExpenseItem(e, i, false));
+  });
+
+  totalEl.textContent = `Összesen: ${total} Ft`;
+}
+
+// 🔁 ÁLLANDÓ
+function renderRecurring() {
+  recurringList.innerHTML = "";
+  recurringExpenses.forEach((e, i) => {
+    recurringList.appendChild(createExpenseItem(e, i, true));
+  });
+}
+
+// 📊 STATISZTIKA
+function renderStats() {
+  statsList.innerHTML = "";
+  const month = monthPicker.value;
+  const map = {};
+
+  // Összegzés
+  recurringExpenses.forEach(e => {
+    map[e.category] = (map[e.category] || 0) + e.amount;
+  });
+  expenses.filter(e => e.date === month).forEach(e => {
+    map[e.category] = (map[e.category] || 0) + e.amount;
+  });
+
+  // Listázás top 3 kiemelve
+  Object.entries(map)
+    .sort((a, b) => b[1] - a[1])
+    .forEach(([cat, sum], i) => {
+      const li = document.createElement("li");
+      li.innerHTML = `${i < 3 ? "🔥 " : ""}<strong>${cat}</strong>: ${sum} Ft`;
+      statsList.appendChild(li);
+    });
+
+  // KÖRDIAGRAM
+  const canvas = document.getElementById("stats-chart");
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const entries = Object.entries(map);
+  if (entries.length === 0) return;
+
+  const total = entries.reduce((acc, [, val]) => acc + val, 0);
+  let startAngle = -0.5 * Math.PI;
+
+  const colors = [
+    "#22c55e","#facc15","#3b82f6","#f87171","#a855f7","#14b8a6","#f97316","#eab308"
+  ];
+
+  entries.forEach(([cat, val], i) => {
+    const slice = (val / total) * 2 * Math.PI;
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.beginPath();
+    ctx.moveTo(200, 200); 
+    ctx.arc(200, 200, 150, startAngle, startAngle + slice);
+    ctx.closePath();
+    ctx.fill();
+    startAngle += slice;
+  });
+
+  // címek
+  let angle = -0.5 * Math.PI;
+  ctx.font = "16px sans-serif";
+  ctx.fillStyle = "#e5e7eb";
+  entries.forEach(([cat, val], i) => {
+    const slice = (val / total) * 2 * Math.PI;
+    const x = 200 + Math.cos(angle + slice / 2) * 100;
+    const y = 200 + Math.sin(angle + slice / 2) * 100;
+    ctx.fillText(cat, x - 20, y);
+    angle += slice;
+  });
+}
+
+// ➕ ÚJ KÖLTSÉG
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  const expense = {
+    amount: Number(amount.value),
+    category: category.value,
+    note: note.value,
+    date: monthPicker.value
+  };
+
+  if (recurring.checked) recurringExpenses.push(expense);
+  else expenses.push(expense);
+
+  localStorage.setItem("expenses", JSON.stringify(expenses));
+  localStorage.setItem("recurring", JSON.stringify(recurringExpenses));
+
+  form.reset();
+  renderAll();
+});
+
+monthPicker.addEventListener("change", renderAll);
+
+function renderAll() {
+  renderMonth();
+  renderRecurring();
+  renderStats();
+}
+
+// START
+renderAll();
