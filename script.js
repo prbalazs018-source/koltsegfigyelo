@@ -52,7 +52,60 @@ tabRecurring.onclick = () => {
   monthView.classList.add("hidden");
 };
 
-// RENDER HAVI
+// 🧩 KÖLTSÉG SOR (helper)
+function createExpenseItem(e, index, isRecurring) {
+  const li = document.createElement("li");
+
+  li.innerHTML = `
+    <strong>${e.amount} Ft</strong> – ${e.category}<br>
+    <small>${e.note || ""}</small>
+    <div style="margin-top:6px; display:flex; gap:6px;">
+      <button data-edit>✏️</button>
+      <button data-delete>🗑️</button>
+    </div>
+  `;
+
+  // TÖRLÉS
+  li.querySelector("[data-delete]").onclick = () => {
+    if (!confirm("Biztos törlöd?")) return;
+
+    if (isRecurring) {
+      recurringExpenses.splice(index, 1);
+      localStorage.setItem("recurring", JSON.stringify(recurringExpenses));
+      renderRecurring();
+    } else {
+      expenses.splice(index, 1);
+      localStorage.setItem("expenses", JSON.stringify(expenses));
+      renderMonth();
+    }
+  };
+
+  // SZERKESZTÉS
+  li.querySelector("[data-edit]").onclick = () => {
+    const newAmount = prompt("Új összeg (Ft):", e.amount);
+    if (newAmount === null) return;
+
+    const newCategory = prompt("Új kategória:", e.category);
+    const newNote = prompt("Új megjegyzés:", e.note || "");
+
+    e.amount = Number(newAmount);
+    e.category = newCategory;
+    e.note = newNote;
+
+    if (isRecurring) {
+      localStorage.setItem("recurring", JSON.stringify(recurringExpenses));
+      renderRecurring();
+      renderMonth();
+    } else {
+      localStorage.setItem("expenses", JSON.stringify(expenses));
+      renderMonth();
+    }
+  };
+
+  return li;
+}
+
+// 📅 HAVI RENDER
 function renderMonth() {
   list.innerHTML = "";
   let total = 0;
@@ -60,38 +113,28 @@ function renderMonth() {
 
   recurringExpenses.forEach(e => {
     total += e.amount;
-    const li = document.createElement("li");
-    li.innerHTML = `<strong>${e.amount} Ft</strong> – ${e.category} 🔁`;
-    list.appendChild(li);
+    list.appendChild(createExpenseItem(e, 0, true));
   });
 
   expenses
     .filter(e => e.date === selectedMonth)
-    .forEach(e => {
+    .forEach((e, i) => {
       total += e.amount;
-      const li = document.createElement("li");
-      li.innerHTML = `<strong>${e.amount} Ft</strong> – ${e.category}`;
-      list.appendChild(li);
+      list.appendChild(createExpenseItem(e, i, false));
     });
 
   totalEl.textContent = `Összesen: ${total} Ft`;
 }
 
-// RENDER ÁLLANDÓ
+// 🔁 ÁLLANDÓ RENDER
 function renderRecurring() {
   recurringList.innerHTML = "";
-
-  recurringExpenses.forEach(e => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <strong>${e.amount} Ft</strong> – ${e.category}<br>
-      <small>${e.note || ""}</small>
-    `;
-    recurringList.appendChild(li);
+  recurringExpenses.forEach((e, i) => {
+    recurringList.appendChild(createExpenseItem(e, i, true));
   });
 }
 
-// ÚJ KÖLTSÉG
+// ➕ ÚJ KÖLTSÉG
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
