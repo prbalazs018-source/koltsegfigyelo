@@ -1,5 +1,4 @@
 body {
-  background-color: red; /* ideiglenes teszt */
   background-image: url('background.png');
   background-size: cover;      /* kitölti a képernyőt */
   background-position: center; /* középre igazítás */
@@ -74,6 +73,7 @@ li {
   border-radius: 8px;
   margin-bottom: 0.5rem;
 }
+
 
 
 
