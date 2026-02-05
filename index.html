@@ -10,34 +10,28 @@
 
 <h1>💸 Költségfigyelő</h1>
 
-<!-- HÓNAP VÁLASZTÓ -->
-<label>
-  📅 Hónap:
-  <input type="month" id="monthPicker">
-</label>
+<!-- TABOK -->
+<div class="tabs">
+  <button id="tab-month" class="active">📅 Havi</button>
+  <button id="tab-recurring">🔁 Állandó</button>
+</div>
 
-<h2 id="total">Összesen: 0 Ft</h2>
-
-<form id="expense-form">
-  <input type="number" id="amount" placeholder="Összeg (Ft)" required>
-
-  <select id="category" required>
-    <option value="">Kategória kiválasztása</option>
-  </select>
-
-  <input type="text" id="note" placeholder="Megjegyzés (opcionális)">
-
-  <label class="checkbox">
-    <input type="checkbox" id="recurring">
-    Állandó költség (havonta)
+<!-- HAVI NÉZET -->
+<section id="month-view">
+  <label>
+    📅 Hónap:
+    <input type="month" id="monthPicker">
   </label>
 
-  <button type="submit">Hozzáad</button>
-</form>
+  <h2 id="total">Összesen: 0 Ft</h2>
 
-<h2>📋 Költségek ebben a hónapban</h2>
-<ul id="expense-list"></ul>
+  <form id="expense-form">
+    <input type="number" id="amount" placeholder="Összeg (Ft)" required>
 
-<script src="script.js"></script>
-</body>
-</html>
+    <select id="category" required>
+      <option value="">Kategória kiválasztása</option>
+    </select>
+
+    <input type="text" id="note" placeholder="Megjegyzés (opcionális)">
+
+    <label class="checkbox">
