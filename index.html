@@ -14,9 +14,10 @@
 <div class="tabs">
   <button id="tab-month" class="active">📅 Havi</button>
   <button id="tab-recurring">🔁 Állandó</button>
+  <button id="tab-stats">📊 Statisztika</button>
 </div>
 
-<!-- HAVI NÉZET -->
+<!-- HAVI -->
 <section id="month-view">
   <label>
     📅 Hónap:
@@ -35,3 +36,28 @@
     <input type="text" id="note" placeholder="Megjegyzés (opcionális)">
 
     <label class="checkbox">
+      <input type="checkbox" id="recurring">
+      Állandó költség (havonta)
+    </label>
+
+    <button type="submit">Hozzáad</button>
+  </form>
+
+  <ul id="expense-list"></ul>
+</section>
+
+<!-- ÁLLANDÓ -->
+<section id="recurring-view" class="hidden">
+  <h2>🔁 Állandó költségek</h2>
+  <ul id="recurring-list"></ul>
+</section>
+
+<!-- STAT -->
+<section id="stats-view" class="hidden">
+  <h2>📊 Kategória statisztika</h2>
+  <ul id="stats-list"></ul>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
