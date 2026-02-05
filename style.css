@@ -1,5 +1,5 @@
 body {
-  background-image: url('background.png');
+  background-image: url('background.png?v=2');
   background-size: cover;      /* kitölti a képernyőt */
   background-position: center; /* középre igazítás */
   background-repeat: no-repeat;
@@ -73,6 +73,7 @@ li {
   border-radius: 8px;
   margin-bottom: 0.5rem;
 }
+
 
 
 
