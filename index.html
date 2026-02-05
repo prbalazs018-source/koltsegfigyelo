@@ -8,28 +8,36 @@
 </head>
 <body>
 
-  <h1>💸 Költségfigyelő</h1>
+<h1>💸 Költségfigyelő</h1>
 
-  <form id="expense-form">
-    <input type="number" id="amount" placeholder="Összeg (Ft)" required />
+<!-- HÓNAP VÁLASZTÓ -->
+<label>
+  📅 Hónap:
+  <input type="month" id="monthPicker">
+</label>
 
-    <select id="category" required>
-      <option value="">Kategória kiválasztása</option>
-    </select>
+<h2 id="total">Összesen: 0 Ft</h2>
 
-    <input type="text" id="note" placeholder="Megjegyzés (opcionális)" />
+<form id="expense-form">
+  <input type="number" id="amount" placeholder="Összeg (Ft)" required>
 
-    <label class="checkbox">
-      <input type="checkbox" id="recurring">
-      Állandó költség (havonta)
-    </label>
+  <select id="category" required>
+    <option value="">Kategória kiválasztása</option>
+  </select>
 
-    <button type="submit">Hozzáad</button>
-  </form>
+  <input type="text" id="note" placeholder="Megjegyzés (opcionális)">
 
-  <h2>📋 Költségek</h2>
-  <ul id="expense-list"></ul>
+  <label class="checkbox">
+    <input type="checkbox" id="recurring">
+    Állandó költség (havonta)
+  </label>
 
-  <script src="script.js"></script>
+  <button type="submit">Hozzáad</button>
+</form>
+
+<h2>📋 Költségek ebben a hónapban</h2>
+<ul id="expense-list"></ul>
+
+<script src="script.js"></script>
 </body>
 </html>
