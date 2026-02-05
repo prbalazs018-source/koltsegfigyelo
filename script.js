@@ -17,13 +17,13 @@ const statsView = document.getElementById("stats-view");
 
 // KATEGÓRIÁK
 const CATEGORIES = [
-  "🍔 Étel",
-  "🏠 Lakhatás",
-  "🚗 Közlekedés",
+  "🍔 Szórakozás",
+  "🏠 Lakhatás Csapó",
+  "🛖 Lakhatás Albi",
+  "🚗 Benzin",
   "📱 Előfizetés",
-  "🎮 Szórakozás",
   "🛒 Bevásárlás",
-  "💊 Egészség",
+  "🐶 Kutya",
   "📦 Egyéb"
 ];
 
@@ -217,3 +217,4 @@ function renderAll() {
 
 // START
 renderAll();
+
